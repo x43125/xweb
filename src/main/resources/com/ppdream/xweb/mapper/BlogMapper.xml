@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ppdream.xweb.mapper.BlogMapper">
+    <resultMap id="BaseResultMap" type="com.ppdream.xweb.entity.Blog">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="blog_name" jdbcType="VARCHAR" property="blogName"/>
+        <result column="blog_tag" jdbcType="VARCHAR" property="blogTag"/>
+        <result column="blog_content" jdbcType="VARCHAR" property="blogContent"/>
+        <result column="blog_pic" jdbcType="VARCHAR" property="blogPic"/>
+        <result column="read_count" jdbcType="INTEGER" property="readCount"/>
+        <result column="like_count" jdbcType="INTEGER" property="likeCount"/>
+        <result column="comment_count" jdbcType="INTEGER" property="commentCount"/>
+        <result column="forward_count" jdbcType="INTEGER" property="forwardCount"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, blog_name, blog_tag, blog_content, blog_pic, read_count, like_count, comment_count,
+    forward_count, create_time, update_time
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from blog
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectByBlogName" resultType="com.ppdream.xweb.entity.Blog">
+        select
+        <include refid="Base_Column_List"></include>
+        from blog
+        where blog_name=#{blogName}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from blog
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.ppdream.xweb.entity.Blog"
+            useGeneratedKeys="true">
+        insert into blog (blog_name, blog_tag, blog_content,
+                          blog_pic, read_count, like_count,
+                          comment_count, forward_count, create_time,
+                          update_time)
+        values (#{blogName,jdbcType=VARCHAR}, #{blogTag,jdbcType=VARCHAR}, #{blogContent,jdbcType=VARCHAR},
+                #{blogPic,jdbcType=VARCHAR}, #{readCount,jdbcType=INTEGER}, #{likeCount,jdbcType=INTEGER},
+                #{commentCount,jdbcType=INTEGER}, #{forwardCount,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+                #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.ppdream.xweb.entity.Blog"
+            useGeneratedKeys="true">
+        insert into blog
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="blogName != null">
+                blog_name,
+            </if>
+            <if test="blogTag != null">
+                blog_tag,
+            </if>
+            <if test="blogContent != null">
+                blog_content,
+            </if>
+            <if test="blogPic != null">
+                blog_pic,
+            </if>
+            <if test="readCount != null">
+                read_count,
+            </if>
+            <if test="likeCount != null">
+                like_count,
+            </if>
+            <if test="commentCount != null">
+                comment_count,
+            </if>
+            <if test="forwardCount != null">
+                forward_count,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="blogName != null">
+                #{blogName,jdbcType=VARCHAR},
+            </if>
+            <if test="blogTag != null">
+                #{blogTag,jdbcType=VARCHAR},
+            </if>
+            <if test="blogContent != null">
+                #{blogContent,jdbcType=VARCHAR},
+            </if>
+            <if test="blogPic != null">
+                #{blogPic,jdbcType=VARCHAR},
+            </if>
+            <if test="readCount != null">
+                #{readCount,jdbcType=INTEGER},
+            </if>
+            <if test="likeCount != null">
+                #{likeCount,jdbcType=INTEGER},
+            </if>
+            <if test="commentCount != null">
+                #{commentCount,jdbcType=INTEGER},
+            </if>
+            <if test="forwardCount != null">
+                #{forwardCount,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ppdream.xweb.entity.Blog">
+        update blog
+        <set>
+            <if test="blogName != null">
+                blog_name = #{blogName,jdbcType=VARCHAR},
+            </if>
+            <if test="blogTag != null">
+                blog_tag = #{blogTag,jdbcType=VARCHAR},
+            </if>
+            <if test="blogContent != null">
+                blog_content = #{blogContent,jdbcType=VARCHAR},
+            </if>
+            <if test="blogPic != null">
+                blog_pic = #{blogPic,jdbcType=VARCHAR},
+            </if>
+            <if test="readCount != null">
+                read_count = #{readCount,jdbcType=INTEGER},
+            </if>
+            <if test="likeCount != null">
+                like_count = #{likeCount,jdbcType=INTEGER},
+            </if>
+            <if test="commentCount != null">
+                comment_count = #{commentCount,jdbcType=INTEGER},
+            </if>
+            <if test="forwardCount != null">
+                forward_count = #{forwardCount,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ppdream.xweb.entity.Blog">
+        update blog
+        set blog_name     = #{blogName,jdbcType=VARCHAR},
+            blog_tag      = #{blogTag,jdbcType=VARCHAR},
+            blog_content  = #{blogContent,jdbcType=VARCHAR},
+            blog_pic      = #{blogPic,jdbcType=VARCHAR},
+            read_count    = #{readCount,jdbcType=INTEGER},
+            like_count    = #{likeCount,jdbcType=INTEGER},
+            comment_count = #{commentCount,jdbcType=INTEGER},
+            forward_count = #{forwardCount,jdbcType=INTEGER},
+            create_time   = #{createTime,jdbcType=TIMESTAMP},
+            update_time   = #{updateTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>
