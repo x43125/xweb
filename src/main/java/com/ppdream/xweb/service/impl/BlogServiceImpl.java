@@ -1,15 +1,31 @@
 package com.ppdream.xweb.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ppdream.xweb.common.api.CommonResult;
 import com.ppdream.xweb.common.exception.ServiceException;
+import com.ppdream.xweb.common.exception.file.FileException;
+import com.ppdream.xweb.common.exception.file.FileExceptionCodes;
+import com.ppdream.xweb.dto.BlogDto;
+import com.ppdream.xweb.dto.KeywordDto;
 import com.ppdream.xweb.entity.Blog;
 import com.ppdream.xweb.mapper.BlogMapper;
 import com.ppdream.xweb.service.BlogService;
+import com.ppdream.xweb.utils.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: x43125
@@ -44,4 +60,43 @@ public class BlogServiceImpl implements BlogService {
             }
         }
     }
+
+    @Override
+    public CommonResult<Map<String, Object>> getBlogList(KeywordDto keywordDto) {
+        IPage<Blog> blogPage = blogMapper.selectAll(new Page<Blog>(keywordDto.getCurrent(), keywordDto.getSize()));
+        List<Blog> blogList = blogPage.getRecords();
+        Map<String, Object> data = new HashMap<>();
+        data.put("list", blogList);
+        data.put("size", blogPage.getSize());
+        data.put("current", blogPage.getCurrent());
+        data.put("total", blogPage.getTotal());
+        return CommonResult.success(data);
+    }
+
+    @Value("${upload.blogDir}/")
+    private String blogDir;
+
+    @Override
+    public List<String> readBlog(String blogName) {
+        String localBlogDir = blogDir +  blogName;
+        LOGGER.info("读取文件:" + localBlogDir);
+        return FileUtils.readFile(localBlogDir);
+    }
+
+    @Override
+    public boolean uploadBlog(BlogDto blogDto, MultipartFile file) {
+        String uploadBlogDir = blogDir + blogDto.getBlogName();
+        File file1 = new File(uploadBlogDir);
+        try {
+            file.transferTo(file1);
+        } catch (IOException e) {
+            throw new FileException(FileExceptionCodes.FILE_UPLOAD_FAILED.getCode(), null);
+        }
+
+        return file1.exists();
+    }
 }
+
+
+
+

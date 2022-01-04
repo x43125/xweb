@@ -9,7 +9,8 @@ import lombok.Data;
 
 /**
  * user
- * @author 
+ *
+ * @author
  */
 @Data
 public class User implements Serializable {
@@ -19,10 +20,10 @@ public class User implements Serializable {
 
     private String passwd;
 
-    @JsonFormat (pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
-    @JsonFormat (pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

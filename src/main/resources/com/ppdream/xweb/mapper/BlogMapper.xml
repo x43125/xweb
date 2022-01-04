@@ -30,6 +30,11 @@
         from blog
         where blog_name=#{blogName}
     </select>
+    <select id="selectAll" resultType="com.ppdream.xweb.entity.Blog">
+        select
+        <include refid="Base_Column_List"></include>
+        from blog
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete
         from blog

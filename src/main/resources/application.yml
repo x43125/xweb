@@ -44,4 +44,4 @@ jwt:
 
 # 上传文件存储位置
 upload:
-  saveDir: F:/blogSaveDir # 上传的文件存储位置
+  blogDir: F:/ppdream/blogSaveDir # 上传的文件存储位置

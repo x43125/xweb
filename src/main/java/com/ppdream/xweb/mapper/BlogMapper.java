@@ -1,5 +1,7 @@
 package com.ppdream.xweb.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ppdream.xweb.entity.Blog;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -20,4 +22,6 @@ public interface BlogMapper {
     int updateByPrimaryKey(Blog record);
 
     Blog selectByBlogName(String blogName);
+
+    IPage<Blog> selectAll(Page<Blog> blogPage);
 }
