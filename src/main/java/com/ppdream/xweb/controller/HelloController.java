@@ -1,8 +1,7 @@
 package com.ppdream.xweb.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ppdream.xweb.dto.TestParam;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author: x43125
@@ -12,9 +11,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloController {
 
-    @GetMapping("/helloworld")
+    @GetMapping("/sayHello")
     public String sayHello() {
         return "hello world";
     }
 
+    @PostMapping("/testParam")
+    public String testParam(String key1, String key2) {
+        return key1 + key2;
+    }
+
+    @PostMapping("/testBody")
+    public String testBody(@RequestBody TestParam param) {
+        return param.getParam1() + param.getParam2();
+    }
+
+    @GetMapping("/testGet")
+    public String testGet() {
+        return "test get success";
+    }
 }
