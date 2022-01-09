@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @RequestMapping("/blog")
 @RestController
+@CrossOrigin
 public class BlogController {
 
     @Autowired

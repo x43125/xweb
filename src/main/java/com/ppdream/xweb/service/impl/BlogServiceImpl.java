@@ -70,6 +70,7 @@ public class BlogServiceImpl implements BlogService {
         data.put("size", blogPage.getSize());
         data.put("current", blogPage.getCurrent());
         data.put("total", blogPage.getTotal());
+        System.out.println(((List<Blog>)data.get("list")).get(0).getBlogName());
         return CommonResult.success(data);
     }
 
