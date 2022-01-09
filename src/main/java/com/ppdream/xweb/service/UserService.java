@@ -1,6 +1,7 @@
 package com.ppdream.xweb.service;
 
 import com.ppdream.xweb.dto.LoginUser;
+import com.ppdream.xweb.dto.RegisterUser;
 import com.ppdream.xweb.entity.User;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 public interface UserService {
     boolean login(LoginUser user);
 
-    boolean register(User user);
+    boolean register(RegisterUser user);
 
     List<User> getUserList();
 }

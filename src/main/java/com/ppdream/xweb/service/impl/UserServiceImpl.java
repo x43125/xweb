@@ -5,15 +5,14 @@ import cn.hutool.core.util.StrUtil;
 import com.ppdream.xweb.common.exception.ServiceException;
 import com.ppdream.xweb.common.exception.user.UserPasswordNotMatchException;
 import com.ppdream.xweb.dto.LoginUser;
+import com.ppdream.xweb.dto.RegisterUser;
 import com.ppdream.xweb.entity.User;
 import com.ppdream.xweb.mapper.UserMapper;
 import com.ppdream.xweb.service.UserService;
-import com.ppdream.xweb.utils.redis.ProtostuffSerializer;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +53,7 @@ public class UserServiceImpl implements UserService {
             LOGGER.info("用户登录中");
             User userFromDb = userMapper.selectByUsername(user.getUsername());
             if (ObjectUtil.isEmpty(userFromDb) || !userFromDb.getPasswd().equals(user.getPasswd())) {
-                throw new UserPasswordNotMatchException();
+                return false;
             } else {
                 LOGGER.info("验证成功，登录");
                 // 将用户信息放入redis中
@@ -72,14 +71,14 @@ public class UserServiceImpl implements UserService {
                 redisTemplate.expire(key, EXPIRE_TIME, TimeUnit.MINUTES);
                 return true;
             } else {
-                LOGGER.warn("密码错误");
-                throw new UserPasswordNotMatchException();
+                LOGGER.error("密码错误");
+                return false;
             }
         }
     }
 
     @Override
-    public boolean register(User user) {
+    public boolean register(RegisterUser user) {
         LOGGER.info("注册用户...");
         User userFromDb = userMapper.selectByUsername(user.getUsername());
         if (ObjectUtil.isNotEmpty(userFromDb)) {
