@@ -21,7 +21,7 @@ public interface BlogMapper {
 
     int updateByPrimaryKey(Blog record);
 
-    Blog selectByBlogName(String blogName);
+    Blog selectByBlogName(String name);
 
     IPage<Blog> selectAll(Page<Blog> blogPage);
 }

@@ -3,10 +3,10 @@
 <mapper namespace="com.ppdream.xweb.mapper.BlogMapper">
     <resultMap id="BaseResultMap" type="com.ppdream.xweb.entity.Blog">
         <id column="id" jdbcType="BIGINT" property="id"/>
-        <result column="blog_name" jdbcType="VARCHAR" property="blogName"/>
-        <result column="blog_tag" jdbcType="VARCHAR" property="blogTag"/>
-        <result column="blog_content" jdbcType="VARCHAR" property="blogContent"/>
-        <result column="blog_pic" jdbcType="VARCHAR" property="blogPic"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="tag" jdbcType="VARCHAR" property="tag"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="pic" jdbcType="VARCHAR" property="pic"/>
         <result column="read_count" jdbcType="INTEGER" property="readCount"/>
         <result column="like_count" jdbcType="INTEGER" property="likeCount"/>
         <result column="comment_count" jdbcType="INTEGER" property="commentCount"/>
@@ -15,7 +15,7 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id, blog_name, blog_tag, blog_content, blog_pic, read_count, like_count, comment_count,
+        id, name, tag, content, pic, read_count, like_count, comment_count,
     forward_count, create_time, update_time
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -28,7 +28,7 @@
         select
         <include refid="Base_Column_List"></include>
         from blog
-        where blog_name=#{blogName}
+        where name=#{name}
     </select>
     <select id="selectAll" resultType="com.ppdream.xweb.entity.Blog">
         select
@@ -42,8 +42,8 @@
     </delete>
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.ppdream.xweb.entity.Blog"
             useGeneratedKeys="true">
-        insert into blog (blog_name, blog_tag, blog_content,
-                          blog_pic, read_count, like_count,
+        insert into blog (name, tag, content,
+                          pic, read_count, like_count,
                           comment_count, forward_count, create_time,
                           update_time)
         values (#{blogName,jdbcType=VARCHAR}, #{blogTag,jdbcType=VARCHAR}, #{blogContent,jdbcType=VARCHAR},
@@ -56,16 +56,16 @@
         insert into blog
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="blogName != null">
-                blog_name,
+                name,
             </if>
             <if test="blogTag != null">
-                blog_tag,
+                tag,
             </if>
             <if test="blogContent != null">
-                blog_content,
+                content,
             </if>
             <if test="blogPic != null">
-                blog_pic,
+                pic,
             </if>
             <if test="readCount != null">
                 read_count,
@@ -123,16 +123,16 @@
         update blog
         <set>
             <if test="blogName != null">
-                blog_name = #{blogName,jdbcType=VARCHAR},
+                name = #{blogName,jdbcType=VARCHAR},
             </if>
             <if test="blogTag != null">
-                blog_tag = #{blogTag,jdbcType=VARCHAR},
+                tag = #{blogTag,jdbcType=VARCHAR},
             </if>
             <if test="blogContent != null">
-                blog_content = #{blogContent,jdbcType=VARCHAR},
+                content = #{blogContent,jdbcType=VARCHAR},
             </if>
             <if test="blogPic != null">
-                blog_pic = #{blogPic,jdbcType=VARCHAR},
+                pic = #{blogPic,jdbcType=VARCHAR},
             </if>
             <if test="readCount != null">
                 read_count = #{readCount,jdbcType=INTEGER},
@@ -157,10 +157,10 @@
     </update>
     <update id="updateByPrimaryKey" parameterType="com.ppdream.xweb.entity.Blog">
         update blog
-        set blog_name     = #{blogName,jdbcType=VARCHAR},
-            blog_tag      = #{blogTag,jdbcType=VARCHAR},
-            blog_content  = #{blogContent,jdbcType=VARCHAR},
-            blog_pic      = #{blogPic,jdbcType=VARCHAR},
+        set name          = #{blogName,jdbcType=VARCHAR},
+            tag           = #{blogTag,jdbcType=VARCHAR},
+            content       = #{blogContent,jdbcType=VARCHAR},
+            pic           = #{blogPic,jdbcType=VARCHAR},
             read_count    = #{readCount,jdbcType=INTEGER},
             like_count    = #{likeCount,jdbcType=INTEGER},
             comment_count = #{commentCount,jdbcType=INTEGER},

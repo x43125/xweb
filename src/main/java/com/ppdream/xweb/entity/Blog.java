@@ -15,13 +15,13 @@ import lombok.Data;
 public class Blog implements Serializable {
     private Long id;
 
-    private String blogName;
+    private String name;
 
-    private String blogTag;
+    private String tag;
 
-    private String blogContent;
+    private String content;
 
-    private String blogPic;
+    private String pic;
 
     private Integer readCount;
 

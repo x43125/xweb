@@ -7,7 +7,6 @@ import com.ppdream.xweb.common.exception.request.RequestException;
 import com.ppdream.xweb.dto.BlogDto;
 import com.ppdream.xweb.dto.KeywordDto;
 import com.ppdream.xweb.service.BlogService;
-import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,7 +25,6 @@ public class BlogController {
 
     @PostMapping("/getBlogList")
     private CommonResult getBlogList(@RequestBody KeywordDto keywordDto) {
-
         return blogService.getBlogList(keywordDto);
     }
 
@@ -37,10 +35,10 @@ public class BlogController {
 
     @PostMapping("/readBlog")
     public CommonResult readBlog(@RequestBody BlogDto blogDto) {
-        if (ObjectUtil.isEmpty(blogDto)) {
+        if (ObjectUtil.isEmpty(blogDto) || StrUtil.isBlank(blogDto.getName())) {
             throw new RequestException("请求参数blogDto为空", null);
         }
-        return CommonResult.success(blogService.readBlog(blogDto.getBlogName()));
+        return CommonResult.success(blogService.readBlog(blogDto.getName()));
     }
 
     //todo

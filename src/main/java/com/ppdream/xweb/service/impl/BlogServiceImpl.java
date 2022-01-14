@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +69,7 @@ public class BlogServiceImpl implements BlogService {
         data.put("size", blogPage.getSize());
         data.put("current", blogPage.getCurrent());
         data.put("total", blogPage.getTotal());
-        System.out.println(((List<Blog>)data.get("list")).get(0).getBlogName());
+        System.out.println(((List<Blog>)data.get("list")).get(0).getName());
         return CommonResult.success(data);
     }
 
@@ -79,14 +78,14 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public List<String> readBlog(String blogName) {
-        String localBlogDir = blogDir +  blogName;
+        String localBlogDir = blogDir +  blogName + ".txt";
         LOGGER.info("读取文件:" + localBlogDir);
         return FileUtils.readFile(localBlogDir);
     }
 
     @Override
     public boolean uploadBlog(BlogDto blogDto, MultipartFile file) {
-        String uploadBlogDir = blogDir + blogDto.getBlogName();
+        String uploadBlogDir = blogDir + blogDto.getName();
         File file1 = new File(uploadBlogDir);
         try {
             file.transferTo(file1);

@@ -9,5 +9,5 @@ import lombok.Data;
 @Data
 public class BlogDto {
     private Long id;
-    private String blogName;
+    private String name;
 }
