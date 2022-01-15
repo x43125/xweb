@@ -78,9 +78,19 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public List<String> readBlog(String blogName) {
-        String localBlogDir = blogDir +  blogName + ".txt";
+        Blog blog = blogMapper.selectByBlogName(blogName);
+
+        String localBlogDir = blogDir + blog.getName() + "." + blog.getType();
         LOGGER.info("读取文件:" + localBlogDir);
-        return FileUtils.readFile(localBlogDir);
+        List<String> blogContent = null;
+        try {
+            blogContent = FileUtils.readFile(localBlogDir);
+        } catch (Exception e) {
+            LOGGER.error("读取博客内容失败");
+            throw new FileException(FileExceptionCodes.FILE_READ_EXCEPTION.getCode(), null);
+        }
+
+        return blogContent;
     }
 
     @Override

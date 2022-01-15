@@ -13,10 +13,11 @@
         <result column="forward_count" jdbcType="INTEGER" property="forwardCount"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
     </resultMap>
     <sql id="Base_Column_List">
         id, name, tag, content, pic, read_count, like_count, comment_count,
-    forward_count, create_time, update_time
+    forward_count, create_time, update_time, type
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
@@ -45,26 +46,26 @@
         insert into blog (name, tag, content,
                           pic, read_count, like_count,
                           comment_count, forward_count, create_time,
-                          update_time)
-        values (#{blogName,jdbcType=VARCHAR}, #{blogTag,jdbcType=VARCHAR}, #{blogContent,jdbcType=VARCHAR},
-                #{blogPic,jdbcType=VARCHAR}, #{readCount,jdbcType=INTEGER}, #{likeCount,jdbcType=INTEGER},
+                          update_time, type)
+        values (#{name,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR},
+                #{pic,jdbcType=VARCHAR}, #{readCount,jdbcType=INTEGER}, #{likeCount,jdbcType=INTEGER},
                 #{commentCount,jdbcType=INTEGER}, #{forwardCount,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
-                #{updateTime,jdbcType=TIMESTAMP})
+                #{updateTime,jdbcType=TIMESTAMP}, #{type, jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.ppdream.xweb.entity.Blog"
             useGeneratedKeys="true">
         insert into blog
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="blogName != null">
+            <if test="name != null">
                 name,
             </if>
-            <if test="blogTag != null">
+            <if test="tag != null">
                 tag,
             </if>
-            <if test="blogContent != null">
+            <if test="content != null">
                 content,
             </if>
-            <if test="blogPic != null">
+            <if test="pic != null">
                 pic,
             </if>
             <if test="readCount != null">
@@ -85,19 +86,22 @@
             <if test="updateTime != null">
                 update_time,
             </if>
+            <if test = "type != null">
+                type,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="blogName != null">
-                #{blogName,jdbcType=VARCHAR},
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
             </if>
-            <if test="blogTag != null">
-                #{blogTag,jdbcType=VARCHAR},
+            <if test="tag != null">
+                #{tag,jdbcType=VARCHAR},
             </if>
-            <if test="blogContent != null">
-                #{blogContent,jdbcType=VARCHAR},
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
             </if>
-            <if test="blogPic != null">
-                #{blogPic,jdbcType=VARCHAR},
+            <if test="pic != null">
+                #{pic,jdbcType=VARCHAR},
             </if>
             <if test="readCount != null">
                 #{readCount,jdbcType=INTEGER},
@@ -117,22 +121,25 @@
             <if test="updateTime != null">
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.ppdream.xweb.entity.Blog">
         update blog
         <set>
-            <if test="blogName != null">
-                name = #{blogName,jdbcType=VARCHAR},
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
             </if>
-            <if test="blogTag != null">
-                tag = #{blogTag,jdbcType=VARCHAR},
+            <if test="tag != null">
+                tag = #{tag,jdbcType=VARCHAR},
             </if>
-            <if test="blogContent != null">
-                content = #{blogContent,jdbcType=VARCHAR},
+            <if test="content != null">
+                content = #{content,jdbcType=VARCHAR},
             </if>
-            <if test="blogPic != null">
-                pic = #{blogPic,jdbcType=VARCHAR},
+            <if test="pic != null">
+                pic = #{pic,jdbcType=VARCHAR},
             </if>
             <if test="readCount != null">
                 read_count = #{readCount,jdbcType=INTEGER},
@@ -152,21 +159,25 @@
             <if test="updateTime != null">
                 update_time = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="type != null">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.ppdream.xweb.entity.Blog">
         update blog
-        set name          = #{blogName,jdbcType=VARCHAR},
-            tag           = #{blogTag,jdbcType=VARCHAR},
-            content       = #{blogContent,jdbcType=VARCHAR},
-            pic           = #{blogPic,jdbcType=VARCHAR},
+        set name          = #{name,jdbcType=VARCHAR},
+            tag           = #{tag,jdbcType=VARCHAR},
+            content       = #{content,jdbcType=VARCHAR},
+            pic           = #{pic,jdbcType=VARCHAR},
             read_count    = #{readCount,jdbcType=INTEGER},
             like_count    = #{likeCount,jdbcType=INTEGER},
             comment_count = #{commentCount,jdbcType=INTEGER},
             forward_count = #{forwardCount,jdbcType=INTEGER},
             create_time   = #{createTime,jdbcType=TIMESTAMP},
-            update_time   = #{updateTime,jdbcType=TIMESTAMP}
+            update_time   = #{updateTime,jdbcType=TIMESTAMP},
+            type   = #{type,jdbcType=VARCHAR}
         where id = #{id,jdbcType=BIGINT}
     </update>
 </mapper>
