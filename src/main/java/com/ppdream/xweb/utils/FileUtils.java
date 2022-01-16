@@ -19,7 +19,7 @@ import java.util.List;
 public class FileUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class);
 
-    public static List<String> readFile(String filePath) {
+    public static List<String> readFile2List(String filePath) {
         LOGGER.info("读取文件:" + filePath);
         try(BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             List<String> blogList = new ArrayList<>();
@@ -29,6 +29,22 @@ public class FileUtils {
             }
             reader.close();
             return blogList;
+        } catch (IOException e) {
+            LOGGER.error("读取文本失败：" + filePath);
+            throw new FileException(FileExceptionCodes.FILE_READ_EXCEPTION.getCode(), new Object[]{});
+        }
+    }
+
+    public static String readFile2Str(String filePath) {
+        LOGGER.info("读取文件:" + filePath);
+        try(BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            StringBuilder sb = new StringBuilder();
+            String tempStr;
+            while ((tempStr = reader.readLine()) != null) {
+                sb.append(tempStr);
+            }
+            reader.close();
+            return sb.toString();
         } catch (IOException e) {
             LOGGER.error("读取文本失败：" + filePath);
             throw new FileException(FileExceptionCodes.FILE_READ_EXCEPTION.getCode(), new Object[]{});

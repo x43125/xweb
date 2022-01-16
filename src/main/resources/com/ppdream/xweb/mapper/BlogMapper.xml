@@ -5,7 +5,6 @@
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="tag" jdbcType="VARCHAR" property="tag"/>
-        <result column="content" jdbcType="VARCHAR" property="content"/>
         <result column="pic" jdbcType="VARCHAR" property="pic"/>
         <result column="read_count" jdbcType="INTEGER" property="readCount"/>
         <result column="like_count" jdbcType="INTEGER" property="likeCount"/>
@@ -14,10 +13,13 @@
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="trash_count" jdbcType="INTEGER" property="trashCount"/>
+        <result column="collect_count" jdbcType="INTEGER" property="collectCount"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id, name, tag, content, pic, read_count, like_count, comment_count,
-    forward_count, create_time, update_time, type
+        id, `name`, tag,
+    pic, read_count, like_count, comment_count, forward_count,
+    create_time, update_time, `type`, trash_count, collect_count
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
@@ -25,17 +27,19 @@
         from blog
         where id = #{id,jdbcType=BIGINT}
     </select>
+
     <select id="selectByBlogName" resultType="com.ppdream.xweb.entity.Blog">
         select
-        <include refid="Base_Column_List"></include>
+        <include refid="Base_Column_List"/>
         from blog
-        where name=#{name}
+        where name = #{name}
     </select>
     <select id="selectAll" resultType="com.ppdream.xweb.entity.Blog">
         select
-        <include refid="Base_Column_List"></include>
-        from blog
+        <include refid="Base_Column_List"/>
+        from blog;
     </select>
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete
         from blog
@@ -43,27 +47,27 @@
     </delete>
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.ppdream.xweb.entity.Blog"
             useGeneratedKeys="true">
-        insert into blog (name, tag, content,
+        insert into blog (`name`, tag,
                           pic, read_count, like_count,
                           comment_count, forward_count, create_time,
-                          update_time, type)
-        values (#{name,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR},
+                          update_time, `type`, trash_count,
+                          collect_count)
+        values (#{name,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR},
+                {content,jdbcType=VARCHAR},
                 #{pic,jdbcType=VARCHAR}, #{readCount,jdbcType=INTEGER}, #{likeCount,jdbcType=INTEGER},
                 #{commentCount,jdbcType=INTEGER}, #{forwardCount,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
-                #{updateTime,jdbcType=TIMESTAMP}, #{type, jdbcType=VARCHAR})
+                #{updateTime,jdbcType=TIMESTAMP}, #{type,jdbcType=VARCHAR}, #{trashCount,jdbcType=INTEGER},
+                #{collectCount,jdbcType=INTEGER})
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.ppdream.xweb.entity.Blog"
             useGeneratedKeys="true">
         insert into blog
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null">
-                name,
+                `name`,
             </if>
             <if test="tag != null">
                 tag,
-            </if>
-            <if test="content != null">
-                content,
             </if>
             <if test="pic != null">
                 pic,
@@ -86,8 +90,14 @@
             <if test="updateTime != null">
                 update_time,
             </if>
-            <if test = "type != null">
-                type,
+            <if test="type != null">
+                `type`,
+            </if>
+            <if test="trashCount != null">
+                trash_count,
+            </if>
+            <if test="collectCount != null">
+                collect_count,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -96,9 +106,6 @@
             </if>
             <if test="tag != null">
                 #{tag,jdbcType=VARCHAR},
-            </if>
-            <if test="content != null">
-                #{content,jdbcType=VARCHAR},
             </if>
             <if test="pic != null">
                 #{pic,jdbcType=VARCHAR},
@@ -124,19 +131,22 @@
             <if test="type != null">
                 #{type,jdbcType=VARCHAR},
             </if>
+            <if test="trashCount != null">
+                #{trashCount,jdbcType=INTEGER},
+            </if>
+            <if test="collectCount != null">
+                #{collectCount,jdbcType=INTEGER},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.ppdream.xweb.entity.Blog">
         update blog
         <set>
             <if test="name != null">
-                name = #{name,jdbcType=VARCHAR},
+                `name` = #{name,jdbcType=VARCHAR},
             </if>
             <if test="tag != null">
                 tag = #{tag,jdbcType=VARCHAR},
-            </if>
-            <if test="content != null">
-                content = #{content,jdbcType=VARCHAR},
             </if>
             <if test="pic != null">
                 pic = #{pic,jdbcType=VARCHAR},
@@ -160,16 +170,21 @@
                 update_time = #{updateTime,jdbcType=TIMESTAMP},
             </if>
             <if test="type != null">
-                type = #{type,jdbcType=VARCHAR},
+                `type` = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="trashCount != null">
+                trash_count = #{trashCount,jdbcType=INTEGER},
+            </if>
+            <if test="collectCount != null">
+                collect_count = #{collectCount,jdbcType=INTEGER},
             </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.ppdream.xweb.entity.Blog">
         update blog
-        set name          = #{name,jdbcType=VARCHAR},
+        set `name`        = #{name,jdbcType=VARCHAR},
             tag           = #{tag,jdbcType=VARCHAR},
-            content       = #{content,jdbcType=VARCHAR},
             pic           = #{pic,jdbcType=VARCHAR},
             read_count    = #{readCount,jdbcType=INTEGER},
             like_count    = #{likeCount,jdbcType=INTEGER},
@@ -177,7 +192,14 @@
             forward_count = #{forwardCount,jdbcType=INTEGER},
             create_time   = #{createTime,jdbcType=TIMESTAMP},
             update_time   = #{updateTime,jdbcType=TIMESTAMP},
-            type   = #{type,jdbcType=VARCHAR}
+            `type`        = #{type,jdbcType=VARCHAR},
+            trash_count   = #{trashCount,jdbcType=INTEGER},
+            collect_count = #{collectCount,jdbcType=INTEGER}
         where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="incrReadCount">
+        update blog
+        set read_count=read_count + 1
+        where name = #{blogName}
     </update>
 </mapper>

@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.SQLDataException;
+
 /** 博客
  * @Author: x43125
  * @Date: 22/01/02
@@ -34,7 +36,7 @@ public class BlogController {
     }
 
     @PostMapping("/readBlog")
-    public CommonResult readBlog(@RequestBody BlogDto blogDto) {
+    public CommonResult readBlog(@RequestBody BlogDto blogDto) throws SQLDataException {
         if (ObjectUtil.isEmpty(blogDto) || StrUtil.isBlank(blogDto.getName())) {
             throw new RequestException("请求参数blogDto为空", null);
         }

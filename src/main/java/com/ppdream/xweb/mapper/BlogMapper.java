@@ -24,4 +24,6 @@ public interface BlogMapper {
     Blog selectByBlogName(String name);
 
     IPage<Blog> selectAll(Page<Blog> blogPage);
+
+    void incrReadCount(String blogName);
 }
