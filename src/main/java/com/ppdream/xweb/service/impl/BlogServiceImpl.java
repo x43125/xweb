@@ -8,14 +8,14 @@ import com.ppdream.xweb.common.api.CommonResult;
 import com.ppdream.xweb.common.exception.ServiceException;
 import com.ppdream.xweb.common.exception.file.FileException;
 import com.ppdream.xweb.common.exception.file.FileExceptionCodes;
-import com.ppdream.xweb.dto.BlogDto;
+import com.ppdream.xweb.dto.blog.BlogDto;
 import com.ppdream.xweb.dto.KeywordDto;
+import com.ppdream.xweb.dto.blog.BlogInteractDto;
+import com.ppdream.xweb.mapper.BlogLikeMapper;
 import com.ppdream.xweb.entity.Blog;
 import com.ppdream.xweb.mapper.BlogMapper;
 import com.ppdream.xweb.service.BlogService;
 import com.ppdream.xweb.utils.FileUtils;
-import com.ppdream.xweb.utils.redis.BlogProtostuffSerializer;
-import com.ppdream.xweb.utils.redis.ProtostuffSerializer;
 import com.ppdream.xweb.vo.BlogVO;
 import io.lettuce.core.RedisBusyException;
 import org.slf4j.Logger;
@@ -43,33 +43,34 @@ public class BlogServiceImpl implements BlogService {
     @Autowired
     private BlogMapper blogMapper;
     @Autowired
-    private RedisTemplate<String, String> redisTemplate;
-
+    private BlogLikeMapper blogLikeMapper;
+    @Autowired
+    private RedisTemplate<Object, Object> redisTemplate;
 
     private static final String BLOG_PREFIX = "ppdream:blog";
-    private static final String LIKE_PREFIX = "ppdream:blog:like:";
 
     @Override
-    public Long incrLike(String blogName) {
+    public Integer incrLike(BlogInteractDto blogInteractDto) {
         LOGGER.info("点赞+1");
-        String key = LIKE_PREFIX + blogName;
-
         if (redisTemplate == null) {
             throw new RedisBusyException("Redis连接创建失败");
         }
 
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
-            LOGGER.info("redis命中，点赞+1");
-            return redisTemplate.opsForValue().increment(key);
-        } else {
-            LOGGER.warn("redis未命中，到数据库中查询并存入redis中");
-            Blog blog = blogMapper.selectByBlogName(blogName);
-            if (ObjectUtil.isNotEmpty(blog)) {
-                return redisTemplate.opsForValue().increment(key, blog.getLikeCount() + 1);
-            } else {
-                throw new ServiceException("为查询到该博客");
+        Blog blog = (Blog) redisTemplate.opsForHash().get(BLOG_PREFIX, blogInteractDto.getBlogName());
+        //todo 点暂时将点赞者信息入库，评论等同此
+        if (ObjectUtil.isEmpty(blog)) {
+            LOGGER.info("redis未命中，寻找mysql");
+            blog = blogMapper.selectByBlogName(blogInteractDto.getBlogName());
+            if (ObjectUtil.isEmpty(blog)) {
+                LOGGER.error("未查询到博客: " + blogInteractDto.getBlogName());
+                throw new ServiceException("为查询到该博客: " + blogInteractDto.getBlogName());
             }
         }
+
+        blog.setLikeCount(blog.getLikeCount() + 1);
+        blogMapper.updateByPrimaryKey(blog);
+        redisTemplate.opsForHash().put(BLOG_PREFIX, blogInteractDto.getBlogName(), blog);
+        return blog.getLikeCount();
     }
 
     @Override
@@ -95,15 +96,12 @@ public class BlogServiceImpl implements BlogService {
             throw new RedisBusyException("Redis连接创建失败");
         }
 
-        BlogProtostuffSerializer serializer = new BlogProtostuffSerializer();
-
         Blog blog = null;
         // 有redis走redis
         Object blogStr = redisTemplate.opsForHash().get(BLOG_PREFIX, blogName);
         if (ObjectUtil.isNotEmpty(blogStr)) {
             LOGGER.info("redis命中");
-            // todo 有问题
-            blog = serializer.deserialize(blogStr.toString());
+            blog = (Blog) blogStr;
         } else {
             LOGGER.warn("redis未命中，读数据库");
             // redis未命中则直接去读库，并将值加到redis中
@@ -126,10 +124,7 @@ public class BlogServiceImpl implements BlogService {
         // 数据库缓存一致性处理方式：先更新数据库中数据，再更新redis中数据
         blog.setReadCount(blog.getReadCount() + 1);
         blogMapper.updateByPrimaryKey(blog);
-
-        String serialize = serializer.serialize(blog);
-
-        redisTemplate.opsForHash().put(BLOG_PREFIX, blogName, serialize);
+        redisTemplate.opsForHash().put(BLOG_PREFIX, blogName, blog);
 
         BlogVO blogVO = new BlogVO();
         blogVO.setContent(blogContent);
@@ -148,6 +143,14 @@ public class BlogServiceImpl implements BlogService {
         }
 
         return file1.exists();
+    }
+
+    @Override
+    public Integer incrComment(BlogInteractDto blogInteractDto) {
+
+        return 0;
+
+
     }
 }
 

@@ -1,4 +1,4 @@
-package com.ppdream.xweb.dto;
+package com.ppdream.xweb.dto.blog;
 
 import lombok.Data;
 

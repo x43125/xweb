@@ -4,8 +4,9 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.ppdream.xweb.common.api.CommonResult;
 import com.ppdream.xweb.common.exception.request.RequestException;
-import com.ppdream.xweb.dto.BlogDto;
+import com.ppdream.xweb.dto.blog.BlogDto;
 import com.ppdream.xweb.dto.KeywordDto;
+import com.ppdream.xweb.dto.blog.BlogInteractDto;
 import com.ppdream.xweb.service.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +32,8 @@ public class BlogController {
     }
 
     @PostMapping("/incrLike")
-    public CommonResult incrLike(String blogName) {
-        return CommonResult.success(blogService.incrLike(blogName), "阅读量+1");
+    public CommonResult incrLike(BlogInteractDto blogInteractDto) {
+        return CommonResult.success(blogService.incrLike(blogInteractDto), "阅读量+1");
     }
 
     @PostMapping("/readBlog")
