@@ -20,7 +20,7 @@ public interface BlogService {
      * @param blogInteractDto
      * @return
      */
-    Integer incrLike(BlogInteractDto blogInteractDto);
+    Integer incrLike(BlogInteractDto blogInteractDto) throws SQLDataException;
 
     CommonResult<Map<String, Object>> getBlogList(KeywordDto keywordDto);
 

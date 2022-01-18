@@ -17,7 +17,7 @@ drop table if exists blog_read;
 /*==============================================================*/
 /* Table: blog                                                  */
 /*==============================================================*/
-create table if not exists blog
+create table blog
 (
     id                   int not null auto_increment comment '博客id',
     name                 varchar(40) not null comment '博客名',
@@ -25,6 +25,7 @@ create table if not exists blog
     pic                  varchar(100) comment '博客图片',
     type                 varchar(10) default 'txt' comment '博客本地存储的后缀名',
     read_count           bigint default 0 comment '阅读数',
+    like_count           bigint default 0 comment '点赞数',
     comment_count        bigint default 0 comment '评论数',
     forward_count        bigint default 0 comment '转发数',
     collect_count        bigint default 0 comment '收藏数',
@@ -33,6 +34,7 @@ create table if not exists blog
     create_time          timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '创建时间',
     primary key (id)
 );
+
 
 /*==============================================================*/
 /* Table: blog_collect                                          */

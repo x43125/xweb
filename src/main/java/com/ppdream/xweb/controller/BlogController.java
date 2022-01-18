@@ -32,7 +32,7 @@ public class BlogController {
     }
 
     @PostMapping("/incrLike")
-    public CommonResult incrLike(BlogInteractDto blogInteractDto) {
+    public CommonResult incrLike(@RequestBody BlogInteractDto blogInteractDto) throws SQLDataException {
         return CommonResult.success(blogService.incrLike(blogInteractDto), "阅读量+1");
     }
 

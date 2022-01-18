@@ -5,7 +5,8 @@ spring:
   application:
     name: shiro
   datasource:
-    url: jdbc:mysql://47.98.59.193:3306/study?serverTimeZone=Asia/Shanghai&CharacterEncoding=UTF-8
+#    url: jdbc:mysql://47.98.59.193:3306/study?serverTimeZone=Asia/Shanghai&CharacterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/xweb?serverTimeZone=Asia/Shanghai&CharacterEncoding=UTF-8
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     username: ppdream

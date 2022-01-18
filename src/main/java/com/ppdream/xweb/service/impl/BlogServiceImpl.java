@@ -11,9 +11,12 @@ import com.ppdream.xweb.common.exception.file.FileExceptionCodes;
 import com.ppdream.xweb.dto.blog.BlogDto;
 import com.ppdream.xweb.dto.KeywordDto;
 import com.ppdream.xweb.dto.blog.BlogInteractDto;
+import com.ppdream.xweb.entity.BlogLike;
+import com.ppdream.xweb.entity.User;
 import com.ppdream.xweb.mapper.BlogLikeMapper;
 import com.ppdream.xweb.entity.Blog;
 import com.ppdream.xweb.mapper.BlogMapper;
+import com.ppdream.xweb.mapper.UserMapper;
 import com.ppdream.xweb.service.BlogService;
 import com.ppdream.xweb.utils.FileUtils;
 import com.ppdream.xweb.vo.BlogVO;
@@ -28,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.sql.SQLDataException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,13 +49,16 @@ public class BlogServiceImpl implements BlogService {
     @Autowired
     private BlogLikeMapper blogLikeMapper;
     @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
     private RedisTemplate<Object, Object> redisTemplate;
 
     private static final String BLOG_PREFIX = "ppdream:blog";
 
     @Override
-    public Integer incrLike(BlogInteractDto blogInteractDto) {
-        LOGGER.info("点赞+1");
+    public Integer incrLike(BlogInteractDto blogInteractDto) throws SQLDataException {
+        LOGGER.info("博客: " + blogInteractDto.getBlogName() + " 用户: " + blogInteractDto.getTourName());
         if (redisTemplate == null) {
             throw new RedisBusyException("Redis连接创建失败");
         }
@@ -68,6 +75,22 @@ public class BlogServiceImpl implements BlogService {
         }
 
         blog.setLikeCount(blog.getLikeCount() + 1);
+
+        User tourUser = userMapper.selectByPrimaryKey(blogInteractDto.getTourId());
+        if (ObjectUtil.isEmpty(tourUser)) {
+            throw new SQLDataException("非法用户: 用户id:" + blogInteractDto.getTourId() + " 用户名:" + blogInteractDto.getTourName());
+        }
+
+        // 更新bloglike表，插入一条阅读记录
+        BlogLike blogLike = new BlogLike();
+        blogLike.setBlogId(blogInteractDto.getBlogId());
+        blogLike.setBlogName(blogInteractDto.getBlogName());
+        blogLike.setLikeUserId(blogInteractDto.getTourId());
+        blogLike.setLikeUserName(blogInteractDto.getTourName());
+        blogLike.setCreateTime(new Date());
+        blogLike.setUpdateTime(new Date());
+        blogLikeMapper.insert(blogLike);
+
         blogMapper.updateByPrimaryKey(blog);
         redisTemplate.opsForHash().put(BLOG_PREFIX, blogInteractDto.getBlogName(), blog);
         return blog.getLikeCount();
@@ -82,7 +105,7 @@ public class BlogServiceImpl implements BlogService {
         data.put("size", blogPage.getSize());
         data.put("current", blogPage.getCurrent());
         data.put("total", blogPage.getTotal());
-        System.out.println(((List<Blog>) data.get("list")).get(0).getName());
+//        System.out.println(((List<Blog>) data.get("list")).get(0).getName());
         return CommonResult.success(data);
     }
 
@@ -102,6 +125,7 @@ public class BlogServiceImpl implements BlogService {
         if (ObjectUtil.isNotEmpty(blogStr)) {
             LOGGER.info("redis命中");
             blog = (Blog) blogStr;
+            LOGGER.info("redis: " + String.valueOf(blog.getReadCount()));
         } else {
             LOGGER.warn("redis未命中，读数据库");
             // redis未命中则直接去读库，并将值加到redis中
@@ -109,8 +133,10 @@ public class BlogServiceImpl implements BlogService {
             if (ObjectUtil.isEmpty(blog)) {
                 throw new SQLDataException("数据库无该博客: " + blogName);
             }
+            LOGGER.info("mysql:" + String.valueOf(blog.getReadCount()));
         }
 
+        //todo redis一致性问题：数据库中数据被更新了，但redis中数据是旧的，导致界面展示的还是旧的内容
         String localBlogDir = blogDir + blog.getName() + "." + blog.getType();
         LOGGER.info("读取文件:" + localBlogDir);
         String blogContent;
@@ -123,6 +149,7 @@ public class BlogServiceImpl implements BlogService {
 
         // 数据库缓存一致性处理方式：先更新数据库中数据，再更新redis中数据
         blog.setReadCount(blog.getReadCount() + 1);
+        blog.setUpdateTime(new Date());
         blogMapper.updateByPrimaryKey(blog);
         redisTemplate.opsForHash().put(BLOG_PREFIX, blogName, blog);
 

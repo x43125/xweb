@@ -10,10 +10,6 @@ import lombok.Data;
 public class BlogInteractDto {
     private Long tourId;
     private String tourName;
-    private String comment;
-    private String forwardComment;
-    private String trashComment;
-
     private Long blogId;
     private String blogName;
 }
