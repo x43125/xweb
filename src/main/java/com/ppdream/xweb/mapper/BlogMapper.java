@@ -6,7 +6,6 @@ import com.ppdream.xweb.entity.Blog;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
-@Repository
 @Mapper
 public interface BlogMapper {
     int deleteByPrimaryKey(Long id);

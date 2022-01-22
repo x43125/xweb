@@ -1,7 +1,9 @@
 package com.ppdream.xweb.mapper;
 
 import com.ppdream.xweb.entity.BlogTrash;
+import org.apache.ibatis.annotations.Mapper;
 
+@Mapper
 public interface BlogTrashMapper {
     int deleteByPrimaryKey(Long id);
 

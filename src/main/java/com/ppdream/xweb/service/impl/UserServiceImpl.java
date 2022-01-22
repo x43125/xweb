@@ -3,11 +3,10 @@ package com.ppdream.xweb.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.ppdream.xweb.common.exception.ServiceException;
-import com.ppdream.xweb.common.exception.user.UserPasswordNotMatchException;
 import com.ppdream.xweb.dto.LoginUser;
 import com.ppdream.xweb.dto.RegisterUser;
-import com.ppdream.xweb.entity.User;
-import com.ppdream.xweb.mapper.UserMapper;
+import com.ppdream.xweb.entity.WebUser;
+import com.ppdream.xweb.mapper.WebUserMapper;
 import com.ppdream.xweb.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -30,7 +29,7 @@ public class UserServiceImpl implements UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
-    private UserMapper userMapper;
+    private WebUserMapper webUserMapper;
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
@@ -51,7 +50,7 @@ public class UserServiceImpl implements UserService {
         if (StrUtil.isBlank(value)) {
             LOGGER.warn("redis 未命中，将到数据库中查找");
             LOGGER.info("用户登录中");
-            User userFromDb = userMapper.selectByUsername(user.getUsername());
+            WebUser userFromDb = webUserMapper.selectByUsername(user.getUsername());
             if (ObjectUtil.isEmpty(userFromDb) || !userFromDb.getPasswd().equals(user.getPasswd())) {
                 return false;
             } else {
@@ -80,21 +79,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean register(RegisterUser user) {
         LOGGER.info("注册用户...");
-        User userFromDb = userMapper.selectByUsername(user.getUsername());
+        WebUser userFromDb = webUserMapper.selectByUsername(user.getUsername());
         if (ObjectUtil.isNotEmpty(userFromDb)) {
             throw new ServiceException("用户名已存在，请换一个");
         }
 
         user.setCreateTime(new Date());
         user.setUpdateTime(new Date());
-        userMapper.insert(user);
+        webUserMapper.insert(user);
         LOGGER.info("注册成功");
         return true;
     }
 
     @Override
-    public List<User> getUserList() {
-        return userMapper.selectAll();
+    public List<WebUser> getUserList() {
+        return webUserMapper.selectAll();
     }
 
 

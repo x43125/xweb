@@ -12,7 +12,7 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, blog_name, blog_id, comment_user_id, comment_user_name, `comment`, update_time, 
+    id, blog_name, blog_id, comment_user_id, comment_user_name, comment, update_time,
     create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -27,7 +27,7 @@
   </delete>
   <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.ppdream.xweb.entity.BlogComment" useGeneratedKeys="true">
     insert into blog_comment (blog_name, blog_id, comment_user_id, 
-      comment_user_name, `comment`, update_time, 
+      comment_user_name, comment, update_time,
       create_time)
     values (#{blogName,jdbcType=VARCHAR}, #{blogId,jdbcType=BIGINT}, #{commentUserId,jdbcType=BIGINT}, 
       #{commentUserName,jdbcType=VARCHAR}, #{comment,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
@@ -49,7 +49,7 @@
         comment_user_name,
       </if>
       <if test="comment != null">
-        `comment`,
+        comment,
       </if>
       <if test="updateTime != null">
         update_time,
@@ -98,7 +98,7 @@
         comment_user_name = #{commentUserName,jdbcType=VARCHAR},
       </if>
       <if test="comment != null">
-        `comment` = #{comment,jdbcType=VARCHAR},
+        comment = #{comment,jdbcType=VARCHAR},
       </if>
       <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -115,7 +115,7 @@
       blog_id = #{blogId,jdbcType=BIGINT},
       comment_user_id = #{commentUserId,jdbcType=BIGINT},
       comment_user_name = #{commentUserName,jdbcType=VARCHAR},
-      `comment` = #{comment,jdbcType=VARCHAR},
+      comment = #{comment,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}

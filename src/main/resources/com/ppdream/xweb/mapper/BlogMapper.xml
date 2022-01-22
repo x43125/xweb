@@ -17,9 +17,9 @@
         <result column="collect_count" jdbcType="INTEGER" property="collectCount"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id, `name`, tag,
+        id, name, tag,
     pic, read_count, like_count, comment_count, forward_count,
-    create_time, update_time, `type`, trash_count, collect_count
+    create_time, update_time, type, trash_count, collect_count
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
@@ -47,24 +47,24 @@
     </delete>
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.ppdream.xweb.entity.Blog"
             useGeneratedKeys="true">
-        insert into blog (`name`, tag,
+        insert into blog (name, tag,
                           pic, read_count, like_count,
                           comment_count, forward_count, create_time,
-                          update_time, `type`, trash_count,
+                          update_time, type, trash_count,
                           collect_count)
         values (#{name,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR},
                 {content,jdbcType=VARCHAR},
-                #{pic,jdbcType=VARCHAR}, #{readCount,jdbcType=INTEGER}, #{likeCount,jdbcType=INTEGER},
-                #{commentCount,jdbcType=INTEGER}, #{forwardCount,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
-                #{updateTime,jdbcType=TIMESTAMP}, #{type,jdbcType=VARCHAR}, #{trashCount,jdbcType=INTEGER},
-                #{collectCount,jdbcType=INTEGER})
+                #{pic,jdbcType=VARCHAR}, #{readCount}, #{likeCount},
+                #{commentCount}, #{forwardCount}, #{createTime,jdbcType=TIMESTAMP},
+                #{updateTime,jdbcType=TIMESTAMP}, #{type,jdbcType=VARCHAR}, #{trashCount},
+                #{collectCount})
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.ppdream.xweb.entity.Blog"
             useGeneratedKeys="true">
         insert into blog
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null">
-                `name`,
+                name,
             </if>
             <if test="tag != null">
                 tag,
@@ -91,7 +91,7 @@
                 update_time,
             </if>
             <if test="type != null">
-                `type`,
+                type,
             </if>
             <if test="trashCount != null">
                 trash_count,
@@ -111,16 +111,16 @@
                 #{pic,jdbcType=VARCHAR},
             </if>
             <if test="readCount != null">
-                #{readCount,jdbcType=INTEGER},
+                #{readCount},
             </if>
             <if test="likeCount != null">
-                #{likeCount,jdbcType=INTEGER},
+                #{likeCount},
             </if>
             <if test="commentCount != null">
-                #{commentCount,jdbcType=INTEGER},
+                #{commentCount},
             </if>
             <if test="forwardCount != null">
-                #{forwardCount,jdbcType=INTEGER},
+                #{forwardCount},
             </if>
             <if test="createTime != null">
                 #{createTime,jdbcType=TIMESTAMP},
@@ -132,10 +132,10 @@
                 #{type,jdbcType=VARCHAR},
             </if>
             <if test="trashCount != null">
-                #{trashCount,jdbcType=INTEGER},
+                #{trashCount},
             </if>
             <if test="collectCount != null">
-                #{collectCount,jdbcType=INTEGER},
+                #{collectCount},
             </if>
         </trim>
     </insert>
@@ -143,7 +143,7 @@
         update blog
         <set>
             <if test="name != null">
-                `name` = #{name,jdbcType=VARCHAR},
+                name = #{name,jdbcType=VARCHAR},
             </if>
             <if test="tag != null">
                 tag = #{tag,jdbcType=VARCHAR},
@@ -152,16 +152,16 @@
                 pic = #{pic,jdbcType=VARCHAR},
             </if>
             <if test="readCount != null">
-                read_count = #{readCount,jdbcType=INTEGER},
+                read_count = #{readCount},
             </if>
             <if test="likeCount != null">
-                like_count = #{likeCount,jdbcType=INTEGER},
+                like_count = #{likeCount},
             </if>
             <if test="commentCount != null">
-                comment_count = #{commentCount,jdbcType=INTEGER},
+                comment_count = #{commentCount},
             </if>
             <if test="forwardCount != null">
-                forward_count = #{forwardCount,jdbcType=INTEGER},
+                forward_count = #{forwardCount},
             </if>
             <if test="createTime != null">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -170,31 +170,31 @@
                 update_time = #{updateTime,jdbcType=TIMESTAMP},
             </if>
             <if test="type != null">
-                `type` = #{type,jdbcType=VARCHAR},
+                type = #{type,jdbcType=VARCHAR},
             </if>
             <if test="trashCount != null">
-                trash_count = #{trashCount,jdbcType=INTEGER},
+                trash_count = #{trashCount},
             </if>
             <if test="collectCount != null">
-                collect_count = #{collectCount,jdbcType=INTEGER},
+                collect_count = #{collectCount},
             </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.ppdream.xweb.entity.Blog">
         update blog
-        set `name`        = #{name,jdbcType=VARCHAR},
+        set name        = #{name,jdbcType=VARCHAR},
             tag           = #{tag,jdbcType=VARCHAR},
             pic           = #{pic,jdbcType=VARCHAR},
-            read_count    = #{readCount,jdbcType=INTEGER},
-            like_count    = #{likeCount,jdbcType=INTEGER},
-            comment_count = #{commentCount,jdbcType=INTEGER},
-            forward_count = #{forwardCount,jdbcType=INTEGER},
+            read_count    = #{readCount},
+            like_count    = #{likeCount},
+            comment_count = #{commentCount},
+            forward_count = #{forwardCount},
             create_time   = #{createTime,jdbcType=TIMESTAMP},
             update_time   = #{updateTime,jdbcType=TIMESTAMP},
-            `type`        = #{type,jdbcType=VARCHAR},
-            trash_count   = #{trashCount,jdbcType=INTEGER},
-            collect_count = #{collectCount,jdbcType=INTEGER}
+            type        = #{type,jdbcType=VARCHAR},
+            trash_count   = #{trashCount},
+            collect_count = #{collectCount}
         where id = #{id,jdbcType=BIGINT}
     </update>
     <update id="incrReadCount">

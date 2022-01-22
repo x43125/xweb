@@ -12,11 +12,11 @@ import com.ppdream.xweb.dto.blog.BlogDto;
 import com.ppdream.xweb.dto.KeywordDto;
 import com.ppdream.xweb.dto.blog.BlogInteractDto;
 import com.ppdream.xweb.entity.BlogLike;
-import com.ppdream.xweb.entity.User;
+import com.ppdream.xweb.entity.WebUser;
 import com.ppdream.xweb.mapper.BlogLikeMapper;
 import com.ppdream.xweb.entity.Blog;
 import com.ppdream.xweb.mapper.BlogMapper;
-import com.ppdream.xweb.mapper.UserMapper;
+import com.ppdream.xweb.mapper.WebUserMapper;
 import com.ppdream.xweb.service.BlogService;
 import com.ppdream.xweb.utils.FileUtils;
 import com.ppdream.xweb.vo.BlogVO;
@@ -49,7 +49,7 @@ public class BlogServiceImpl implements BlogService {
     @Autowired
     private BlogLikeMapper blogLikeMapper;
     @Autowired
-    private UserMapper userMapper;
+    private WebUserMapper webUserMapper;
 
     @Autowired
     private RedisTemplate<Object, Object> redisTemplate;
@@ -76,7 +76,7 @@ public class BlogServiceImpl implements BlogService {
 
         blog.setLikeCount(blog.getLikeCount() + 1);
 
-        User tourUser = userMapper.selectByPrimaryKey(blogInteractDto.getTourId());
+        WebUser tourUser = webUserMapper.selectByPrimaryKey(blogInteractDto.getTourId());
         if (ObjectUtil.isEmpty(tourUser)) {
             throw new SQLDataException("非法用户: 用户id:" + blogInteractDto.getTourId() + " 用户名:" + blogInteractDto.getTourName());
         }
@@ -113,19 +113,19 @@ public class BlogServiceImpl implements BlogService {
     private String blogDir;
 
     @Override
-    public Blog readBlog(String blogName) throws SQLDataException {
+    public BlogVO readBlog(String blogName) throws SQLDataException {
         LOGGER.info("读取博客信息: " + blogName);
         if (redisTemplate == null) {
             throw new RedisBusyException("Redis连接创建失败");
         }
 
-        Blog blog = null;
+        Blog blog;
         // 有redis走redis
         Object blogStr = redisTemplate.opsForHash().get(BLOG_PREFIX, blogName);
         if (ObjectUtil.isNotEmpty(blogStr)) {
             LOGGER.info("redis命中");
             blog = (Blog) blogStr;
-            LOGGER.info("redis: " + String.valueOf(blog.getReadCount()));
+            LOGGER.info("redis: " + blog.getReadCount());
         } else {
             LOGGER.warn("redis未命中，读数据库");
             // redis未命中则直接去读库，并将值加到redis中
@@ -133,7 +133,7 @@ public class BlogServiceImpl implements BlogService {
             if (ObjectUtil.isEmpty(blog)) {
                 throw new SQLDataException("数据库无该博客: " + blogName);
             }
-            LOGGER.info("mysql:" + String.valueOf(blog.getReadCount()));
+            LOGGER.info("mysql:" + blog.getReadCount());
         }
 
         //todo redis一致性问题：数据库中数据被更新了，但redis中数据是旧的，导致界面展示的还是旧的内容

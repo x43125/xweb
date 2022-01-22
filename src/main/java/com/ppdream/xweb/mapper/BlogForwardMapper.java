@@ -1,7 +1,9 @@
 package com.ppdream.xweb.mapper;
 
 import com.ppdream.xweb.entity.BlogForward;
+import org.apache.ibatis.annotations.Mapper;
 
+@Mapper
 public interface BlogForwardMapper {
     int deleteByPrimaryKey(Long id);
 

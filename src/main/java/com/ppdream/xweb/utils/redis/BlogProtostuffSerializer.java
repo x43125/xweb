@@ -5,7 +5,6 @@ import com.dyuproject.protostuff.ProtostuffIOUtil;
 import com.dyuproject.protostuff.Schema;
 import com.dyuproject.protostuff.runtime.RuntimeSchema;
 import com.ppdream.xweb.entity.Blog;
-import com.ppdream.xweb.entity.User;
 import org.apache.commons.lang3.SerializationException;
 
 /**

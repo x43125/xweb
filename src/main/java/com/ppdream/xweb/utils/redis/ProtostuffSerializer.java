@@ -4,7 +4,7 @@ import com.dyuproject.protostuff.LinkedBuffer;
 import com.dyuproject.protostuff.ProtostuffIOUtil;
 import com.dyuproject.protostuff.Schema;
 import com.dyuproject.protostuff.runtime.RuntimeSchema;
-import com.ppdream.xweb.entity.User;
+import com.ppdream.xweb.entity.WebUser;
 import org.apache.commons.lang3.SerializationException;
 
 /**
@@ -12,9 +12,9 @@ import org.apache.commons.lang3.SerializationException;
  * @Date: 22/01/02
  */
 public class ProtostuffSerializer {
-    private Schema<User> schema = RuntimeSchema.createFrom(User.class);
+    private Schema<WebUser> schema = RuntimeSchema.createFrom(WebUser.class);
 
-    public String serialize(final User user) {
+    public String serialize(final WebUser user) {
         final LinkedBuffer buffer = LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE);
 
         try {
@@ -32,13 +32,13 @@ public class ProtostuffSerializer {
         }
     }
 
-    public User deserialize(final String byteStr) {
+    public WebUser deserialize(final String byteStr) {
         byte[] bytes = new byte[byteStr.length()];
         for (int i = 0; i < bytes.length; i++) {
             bytes[i] = (byte) byteStr.charAt(i);
         }
 
-        User user = null;
+        WebUser user = null;
         try {
             user = deserializeInternal(bytes, schema.newMessage(), schema);
         } catch (Exception e) {

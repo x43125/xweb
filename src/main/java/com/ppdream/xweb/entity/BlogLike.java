@@ -2,6 +2,9 @@ package com.ppdream.xweb.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
@@ -9,7 +12,9 @@ import lombok.Data;
  * @author 
  */
 @Data
+@TableName(value = "blog_like", schema = "public")
 public class BlogLike implements Serializable {
+    @TableId
     private Long id;
 
     /**

@@ -3,17 +3,21 @@ package com.ppdream.xweb.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
 /**
  * blog
+ *
  * @author
  */
 @Data
-@JsonSerialize
+@TableName(value = "blog", schema = "public")
 public class Blog implements Serializable {
+    @TableId
     private Long id;
 
     /**

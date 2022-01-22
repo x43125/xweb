@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ppdream.xweb.mapper.dao.BlogVoDao">
+
+    <resultMap id="blogVoList" type="com.ppdream.xweb.vo.BlogVO">
+        <collection property="blog" ofType="com.ppdream.xweb.entity.Blog">
+            <id column="id" jdbcType="BIGINT" property="id"/>
+            <result column="name" jdbcType="VARCHAR" property="name"/>
+            <result column="tag" jdbcType="VARCHAR" property="tag"/>
+            <result column="pic" jdbcType="VARCHAR" property="pic"/>
+            <result column="read_count" jdbcType="INTEGER" property="readCount"/>
+            <result column="like_count" jdbcType="INTEGER" property="likeCount"/>
+            <result column="comment_count" jdbcType="INTEGER" property="commentCount"/>
+            <result column="forward_count" jdbcType="INTEGER" property="forwardCount"/>
+            <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+            <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+            <result column="type" jdbcType="VARCHAR" property="type"/>
+            <result column="trash_count" jdbcType="INTEGER" property="trashCount"/>
+            <result column="collect_count" jdbcType="INTEGER" property="collectCount"/>
+        </collection>
+
+        <collection property="blogTouristDtoList" ofType="com.ppdream.xweb.dto.blog.BlogTouristDto"
+                    javaType="arrayList">
+            <id column="tourId" property="tourId"/>
+            <result column="tourName" property="tourName"/>
+            <result column="tourPic" property="tourPic"/>
+            <result column="comment" property="comment"/>
+            <result column="commentTime" property="commentTime"/>
+        </collection>
+    </resultMap>
+    <select id="selectByBlogName" resultType="com.ppdream.xweb.vo.BlogVO" parameterType="string">
+        SELECT b.*,
+               wu.username     as tourName,
+               wu.pic          as tourPic,
+               bc.comment,
+               bc.create_time  as commentTime,
+               bcr.comment_reply,
+               bcr.create_time as replyTIme
+        FROM blog b
+                 LEFT JOIN blog_comment bc ON b."id" = bc.blog_id
+                 JOIN web_user wu ON bc.comment_user_id = wu.id
+                 LEFT JOIN blog_comment_reply bcr
+                           ON bc.blog_id = bcr.blog_id AND bc.comment_user_id = bcr.comment_user_id AND
+                              bc.id = bcr.blog_comment_id
+        where b.name = #{name};
+    </select>
+
+    <!--    <resultMap id="tagBlogList" type="com.wx.selfblog.dto.TagBlogList">-->
+    <!--        <id column="tid" property="tagId"/>-->
+    <!--        <result column="tname" property="tagName"/>-->
+    <!--        <result column="tdescription" property="tagDescription"/>-->
+    <!--        <collection property="blogList" ofType="com.wx.selfblog.entity.Blog" javaType="arrayList">-->
+    <!--            <id column="bid" property="id"/>-->
+    <!--            <result column="bname" property="name"/>-->
+    <!--            <result column="burl" property="url"/>-->
+    <!--            <result column="breadAmount" property="readAmount"/>-->
+    <!--            <result column="blikeAmount" property="likeAmount"/>-->
+    <!--            <result column="bcommentAmount" property="commentAmount"/>-->
+    <!--            <result column="buploadTime" property="uploadTime"/>-->
+    <!--        </collection>-->
+    <!--    </resultMap>-->
+    <!--    <select id="getTagBlogList" resultMap="tagBlogList">-->
+    <!--        select t.id as tid,t.name as tname,t.description as tdescription,-->
+    <!--               b.id as bid, b.name as bname, b.url as burl, b.content as bcontent, b.readAmount as breadAmount,-->
+    <!--               b.likeAmount as blikeAmount, b.commentAmount as bcommentAmount, b.uploadTime as buploadTime-->
+    <!--        from b_tag t-->
+    <!--                 left join b_blog_tag bt on t.id=bt.tagId-->
+    <!--                 left join b_blog b on bt.blogId=b.id;-->
+    <!--    </select>-->
+</mapper>

@@ -4,7 +4,6 @@ import com.ppdream.xweb.common.api.CommonResult;
 import com.ppdream.xweb.common.api.ResultCode;
 import com.ppdream.xweb.dto.LoginUser;
 import com.ppdream.xweb.dto.RegisterUser;
-import com.ppdream.xweb.entity.User;
 import com.ppdream.xweb.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

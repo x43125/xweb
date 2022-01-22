@@ -1,7 +1,9 @@
 package com.ppdream.xweb.mapper;
 
 import com.ppdream.xweb.entity.BlogComment;
+import org.apache.ibatis.annotations.Mapper;
 
+@Mapper
 public interface BlogCommentMapper {
     int deleteByPrimaryKey(Long id);
 

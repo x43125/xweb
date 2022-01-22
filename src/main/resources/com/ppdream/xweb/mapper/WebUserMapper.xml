@@ -1,53 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ppdream.xweb.mapper.UserMapper">
-
-    <resultMap id="BaseResultMap" type="com.ppdream.xweb.entity.User">
-        <id column="id" jdbcType="BIGINT" property="id"/>
+<mapper namespace="com.ppdream.xweb.mapper.WebUserMapper">
+    <resultMap id="BaseResultMap" type="com.ppdream.xweb.entity.WebUser">
+        <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="username" jdbcType="VARCHAR" property="username"/>
         <result column="passwd" jdbcType="VARCHAR" property="passwd"/>
-        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
     </resultMap>
-
     <sql id="Base_Column_List">
-        id, username, passwd, create_time, update_time
+        id, username, passwd, update_time, create_time
     </sql>
-
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from user
-        where id = #{id,jdbcType=BIGINT}
+        from "web_user"
+        where id = #{id}
     </select>
-
-    <select id="selectByUsername" resultType="com.ppdream.xweb.entity.User">
+    <select id="selectByUsername" resultType="com.ppdream.xweb.entity.WebUser">
         select
         <include refid="Base_Column_List"></include>
-        from user
-        where username = #{username,jdbcType=VARCHAR}
+        from "web_user"
+        where username=#{username}
     </select>
-    <select id="selectAll" resultType="com.ppdream.xweb.entity.User">
+    <select id="selectAll" resultType="com.ppdream.xweb.entity.WebUser">
         select
-            <include refid="Base_Column_List"></include>
-        from user
+        <include refid="Base_Column_List"/>
+        from "web_user"
     </select>
-
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete
-        from user
-        where id = #{id,jdbcType=BIGINT}
+        from "web_user"
+        where id = #{id}
     </delete>
-    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.ppdream.xweb.entity.User"
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.ppdream.xweb.entity.WebUser"
             useGeneratedKeys="true">
-        insert into user (username, passwd, create_time,
-                          update_time)
-        values (#{username,jdbcType=VARCHAR}, #{passwd,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
-                #{updateTime,jdbcType=TIMESTAMP})
+        insert into "web_user" (username, passwd, update_time,
+                                create_time)
+        values (#{username,jdbcType=VARCHAR}, #{passwd,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+                #{createTime,jdbcType=TIMESTAMP})
     </insert>
-    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.ppdream.xweb.entity.User"
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.ppdream.xweb.entity.WebUser"
             useGeneratedKeys="true">
-        insert into user
+        insert into "web_user"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="username != null">
                 username,
@@ -55,11 +50,11 @@
             <if test="passwd != null">
                 passwd,
             </if>
-            <if test="createTime != null">
-                create_time,
-            </if>
             <if test="updateTime != null">
                 update_time,
+            </if>
+            <if test="createTime != null">
+                create_time,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -69,16 +64,16 @@
             <if test="passwd != null">
                 #{passwd,jdbcType=VARCHAR},
             </if>
-            <if test="createTime != null">
-                #{createTime,jdbcType=TIMESTAMP},
-            </if>
             <if test="updateTime != null">
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.ppdream.xweb.entity.User">
-        update user
+    <update id="updateByPrimaryKeySelective" parameterType="com.ppdream.xweb.entity.WebUser">
+        update "web_user"
         <set>
             <if test="username != null">
                 username = #{username,jdbcType=VARCHAR},
@@ -86,21 +81,21 @@
             <if test="passwd != null">
                 passwd = #{passwd,jdbcType=VARCHAR},
             </if>
-            <if test="createTime != null">
-                create_time = #{createTime,jdbcType=TIMESTAMP},
-            </if>
             <if test="updateTime != null">
                 update_time = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
         </set>
-        where id = #{id,jdbcType=BIGINT}
+        where id = #{id}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.ppdream.xweb.entity.User">
-        update user
+    <update id="updateByPrimaryKey" parameterType="com.ppdream.xweb.entity.WebUser">
+        update "web_user"
         set username    = #{username,jdbcType=VARCHAR},
             passwd      = #{passwd,jdbcType=VARCHAR},
-            create_time = #{createTime,jdbcType=TIMESTAMP},
-            update_time = #{updateTime,jdbcType=TIMESTAMP}
-        where id = #{id,jdbcType=BIGINT}
+            update_time = #{updateTime,jdbcType=TIMESTAMP},
+            create_time = #{createTime,jdbcType=TIMESTAMP}
+        where id = #{id}
     </update>
 </mapper>
