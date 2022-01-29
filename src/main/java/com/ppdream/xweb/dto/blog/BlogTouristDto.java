@@ -1,7 +1,5 @@
 package com.ppdream.xweb.dto.blog;
 
-import com.ppdream.xweb.entity.BlogComment;
-import com.ppdream.xweb.entity.BlogCommentReply;
 import com.ppdream.xweb.entity.WebUser;
 import lombok.Data;
 

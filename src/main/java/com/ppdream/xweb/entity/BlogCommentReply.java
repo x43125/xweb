@@ -15,4 +15,5 @@ public class BlogCommentReply extends BaseEntity {
     private String blogName;
     private long blogCommentId;
 
+
 }
